@@ -2,8 +2,8 @@
 const express = require('express'); 
 const {requireLogin} = require("./../middlewares/auth");
 const {findUserByUsername, findUserById, createUser} = require('./../DB/users'); 
-const {validateInfo, passwordHash, passwordUnHash} = require('../logic/validate'); 
-
+const {validateRegisterInput, validateLoginInput} = require('../logic/validate'); 
+const {hashPassword, comparePassword} = require('../logic/password'); 
 
 // ========= 2. APP SỬ DỤNG ===========
 const authRoutes = express.Router(); // chỗ mình đặt bom 💣
@@ -11,30 +11,37 @@ const authRoutes = express.Router(); // chỗ mình đặt bom 💣
 
 
 // ========= 3. CÁC ROUTE THUỘC AUTH ======= 
-authRoutes.post('/login', (req, res) => { // 
+authRoutes.post('/login', async (req, res) => { // 
     console.log("log in"); 
 
+    // 1. lấy dữ liệu từ request 
     const {username, password} = req.body; 
 
-    // 1. validate 
-    let {validU, validP} = validateInfo(username, password); 
-    
-    if (!validU || !validP) {
-        return; 
+    // 1. validate input là username và password, nếu không thì trả 400, bad request 
+    if (!validateLoginInput(username, password)) {
+        return res.status(400).json({message: "Invalid username or password"}); 
     }
 
-    // 2. tìm trong DB
-    let user = findUserByUsername(validU); 
-    if (!user) {return;}
-
-    // 3. so sánh password
-    if (validP === passwordUnHash(user.password)) {
-
+    // 2. nếu validated thì tìm user có cùng username, không thì 401, sai thông tin 
+    let user = await findUserByUsername(username); 
+    if (!user) {
+        return res.status(401).json({message: "Invalid credentials"}); 
     }
 
-    // 4. nếu đúng thì tạo session 
-    // tạo session như thế nào? 
-    
+    // 3. nếu có user thì so sánh password, nếu sai thì 401, sai thông tin 
+    const isMatch = await comparePassword(password, user.passwordHash); 
+    if (!isMatch) {
+        return res.status(401).json({message: "Invalid credentials"}); 
+    }
+
+    // 4. nếu ok thì gán req.session.user và trả success 
+    req.session.user = {
+        id: user._id.toString(),
+        username: user.username,
+        role: user.role
+    };
+
+    res.json({message: "You are logged in"}); 
 
 }); 
 
@@ -59,27 +66,31 @@ authRoutes.get('/me', (req, res) => {
     res.json({user: req.user}); 
 }); 
 
-authRoutes.post('/register', (req, res) => { // đăng kí tài khoản 
+authRoutes.post('/register', async (req, res) => { // đăng kí tài khoản 
     console.log("register"); 
 
-    // lấy dữ liệu từ request 
+    // 1. lấy dữ liệu từ request
     const {username, password} = req.body; 
 
-    // 1. validate dữ liệu
-    let {validU, validP} = validateInfo(username, password); 
-    if (!validU || !validP) {
-        return; 
+    // 2. validate input
+    if (!validateRegisterInput(username, password)) {
+        return res.status(400).json({message: "missing information"}); 
     }
 
-    // 2. hash pasword 
-    let hashPass = passwordHash(validP); 
+    // 3. nếu dữ liệu hợp lệ thì tìm trong users bằng username, nếu có thì trả 409  
+    let user = await findUserByUsername(username); 
+    if (user) {
+        return res.status(409).json({message: "User already exist!"}); 
+    }
 
-    // 3. insert user 
-    createUser(validU, hashPass, 'user'); 
+    // 3.5 hash password 
+    let hashPass = await hashPassword(password); 
 
-    // 4. gửi phản hồi
-    res.json({message: "register success"}); 
-    
+    // 4. thêm user vào users
+    await createUser({username, hashPass, role: 'user'}); 
+
+    // 5. báo thành công 
+    res.json({message: "Register success"}); 
 }); 
 
 

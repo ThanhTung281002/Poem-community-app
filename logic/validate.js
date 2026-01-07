@@ -3,39 +3,24 @@
  * chỗ mình đặt bom 💣
  */
 
-function validateInfo(username, password) {
-    let newU, newP; 
-    // coi thử có phải là string hay chưa, và sau đó trim, nếu length lớn hơn 0 thì duyệt. 
-    if (typeof username == "string") {
-        newU = username.trim();
-        newU = (newU.length > 0) ? (newU) : null; 
+function validateRegisterInput(username, password) {
+    if (!username || !password) return false;
+    if (username.length < 3) return false;
+    if (password.length < 6) return false;
+    return true;
+}
+
+function validateLoginInput(username, password) {
+    if (!username || !password) {
+        return false; 
     } else {
-        newU = null; 
+        return true; 
     }
-
-    if (typeof password == "string") {
-        newP = password.trim();
-        newP = (newP.length > 0) ? (newP) : null; 
-    } else {
-        newP = null; 
-    }
-
-
-    return {newU, newP}; 
 }
-
-function passwordHash(password) {
-    return password; 
-}
-
-function passwordUnhash(password) {
-    return password; 
-}
-
 
 module.exports = {
-    validateInfo,
-    passwordHash, 
-    passwordUnHash
-}
+    validateRegisterInput,
+    validateLoginInput
+};
+
 
