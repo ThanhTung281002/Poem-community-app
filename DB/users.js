@@ -17,8 +17,10 @@ async function findUserByUsername(username) {
     return user; 
 }
 
-async function createUser(username, passwordHash, role) {
+async function createUser({username, passwordHash, role}) {
     const users = getUsersCollection();
+
+    console.log("USERS: passwordHash: ", passwordHash); 
 
     // tạo ra một document mới. 
     const user = {

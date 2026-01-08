@@ -24,9 +24,17 @@ function requireAdmin(req, res, next) {
     next(); 
 }
 
+function requireGuest(req, res, next) {
+    if (req.user) {
+        return res.status(400).json({message: "You must log out first"}); 
+    }
+
+    next(); 
+}
 
 module.exports = {
     attachUser,
     requireLogin, 
-    requireAdmin
+    requireAdmin,
+    requireGuest
 }; 

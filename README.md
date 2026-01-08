@@ -5,14 +5,18 @@ Có các logic sau:
 1. Có 3 role: admin, user, guest
 2. guest thì có quyền xem các bài thờ trong phong duy nhất (có thể mở rộng thêm theo chủ đề sau này). User thì ngoài quyền xem các bài thơ trong phòng trưng bày chung, còn có quyền đăng lên có bài thơ của mình, và chỉnh sửa, xóa các bài thơ, và nếu được admin duyệt thì sẽ được để trên phòng trưng bày chung. Admin thì có quyền xét duyệt các bài thơ mới được thành viên gửi lên. 
 3. Thơ có 3 trạng thái draft, pending, approved. 
+4. với 3 role thì có 3 khu vực cho 3 vai trò đó, phòng cá nhân, phòng admin và phòng trưng bày chung cho tất cả mọi người
 
 
 ## API route của website 
 Các api route (những hành động mà BE logic cho phép đối với người dùng): 
-- GET     /api/poems - guest, user xem thơ trên phòng trưng bày 
-- POST    /api/poems - user đăng thơ
-- PUT     /api/poems:id - user sửa thơ (khi pending)
-- DELETE  /api/poems:id - user xóa thơ của mình (khi pending)
+- GET     /api/gallery/poems - tất cả mọi người xem thơ trong phòng triển lãm chung. 
+
+
+- GET     /api/my/poems - user xem thơ pending của bản thân trong trang cá nhân 
+- POST    /api/my/poems - user đăng thơ
+- PUT     /api/my/poems:id - user sửa thơ (khi pending)
+- DELETE  /api/my/poems:id - user xóa thơ của mình (khi pending)
 
 - GET     /api/admin/poems - admin xem tất cả thơ cần duyệt (pending)
 - PUT     /api/admin/poems:id - admin xét duyệt thơ (đổi trạng thái từ pending sang approved)
@@ -49,10 +53,12 @@ createdAt
 updatedAt
 
 ### Map API route với schema 
-- GET     /api/poems - lấy poems mà có status approved 
-- POST    /api/poems - đăng một poem mới lên poems nếu đó là user 
-- PUT     /api/poems:id - chỉnh sửa tile và nội dung (nếu có) cho poems có trùng id 
-- DELETE  /api/poems:id - giống như trên nhưng thay vì chỉnh thì là xóa cả poem đó 
+- GET     /api/gallery/poems - lấy toàn bộ các poems mà có status approved 
+
+- GET     /api/my/poems - lấy poems mà authorId trùng với userId lúc đó 
+- POST    /api/my/poems - đăng một poem mới lên poems nếu đó là user 
+- PUT     /api/my/poems:id - chỉnh sửa tile và nội dung (nếu có) cho poems có trùng id 
+- DELETE  /api/my/poems:id - giống như trên nhưng thay vì chỉnh thì là xóa cả poem đó 
 
 - GET     /api/admin/poems - lấy poems mà có status pending
 - PUT     /api/admin/poems:id - đổi status thành approved của poem trùng id 
@@ -62,4 +68,11 @@ updatedAt
 - POST    /api/auth/logout  -> bên BE 
 - GET     /api/auth/me      -> Bên BE 
 - POST    /api/auth/register -> thêm một user vào users collection 
+
+
+
+### Cách chạy code 
+- git clone sản phẩm về 
+- tải nodejs
+- chạy node server.js trên commandline 
 

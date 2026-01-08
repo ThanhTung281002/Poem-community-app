@@ -18,9 +18,17 @@ function validateLoginInput(username, password) {
     }
 }
 
+function validatePoem(title, content) {
+    if (!title || !content) return false;
+    if (title.length < 3) return false;
+    if (content.length < 10) return false;
+    return true;
+}
+
 module.exports = {
     validateRegisterInput,
-    validateLoginInput
+    validateLoginInput,
+    validatePoem
 };
 
 

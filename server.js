@@ -3,6 +3,10 @@ const session = require('express-session');
 const express = require('express'); 
 const {attachUser} = require('./middlewares/auth')
 const authRoutes = require('./route/auth')
+const myPoemsRoutes = require('./route/my_poems'); 
+const adminRoutes = require('./route/admin'); 
+const galleryRoutes = require('./route/gallery'); 
+const {connectDB } = require('./DB/mongo');
 
 // ======== 2. KHỞI TẠO APP =======
 const app = express(); 
@@ -22,6 +26,10 @@ app.use(session({ // sử dụng session (cookie)
 })); 
 app.use(attachUser); // luôn attach user trước khi tới các route 
 app.use('/api/auth', authRoutes); // dẫn tới authRoutes khi có api tới đường link /api/auth
+app.use('/api/my/poems', myPoemsRoutes); 
+app.use('/api/admin', adminRoutes); 
+app.use('/api/gallery', galleryRoutes); 
+
 
 
 // // ======== CÁC ROUTE GIẢ LẬP ĐỂ TEST MIDDLEWARE ===== 
@@ -70,7 +78,9 @@ app.use('/api/auth', authRoutes); // dẫn tới authRoutes khi có api tới đ
 //     res.json({message: "You are logged out"}); 
 // }); 
 
-
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`); 
-});
+(async () => {
+    await connectDB(); 
+    app.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}`); 
+    });
+})(); 

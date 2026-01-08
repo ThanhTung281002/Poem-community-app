@@ -1,6 +1,6 @@
 // ========= 1. THƯ VIỆN SỬ DỤNG =======
 const express = require('express'); 
-const {requireLogin} = require("./../middlewares/auth");
+const {requireLogin, requireGuest} = require("./../middlewares/auth");
 const {findUserByUsername, findUserById, createUser} = require('./../DB/users'); 
 const {validateRegisterInput, validateLoginInput} = require('../logic/validate'); 
 const {hashPassword, comparePassword} = require('../logic/password'); 
@@ -11,7 +11,7 @@ const authRoutes = express.Router(); // chỗ mình đặt bom 💣
 
 
 // ========= 3. CÁC ROUTE THUỘC AUTH ======= 
-authRoutes.post('/login', async (req, res) => { // 
+authRoutes.post('/login', requireGuest, async (req, res) => { // 
     console.log("log in"); 
 
     // 1. lấy dữ liệu từ request 
@@ -29,7 +29,9 @@ authRoutes.post('/login', async (req, res) => { //
     }
 
     // 3. nếu có user thì so sánh password, nếu sai thì 401, sai thông tin 
-    const isMatch = await comparePassword(password, user.passwordHash); 
+    console.log("password: ", password); 
+    console.log("passwordHash: ", user.passwordHash); 
+    const isMatch = await comparePassword(password, user.passwordHash);  
     if (!isMatch) {
         return res.status(401).json({message: "Invalid credentials"}); 
     }
@@ -66,7 +68,7 @@ authRoutes.get('/me', (req, res) => {
     res.json({user: req.user}); 
 }); 
 
-authRoutes.post('/register', async (req, res) => { // đăng kí tài khoản 
+authRoutes.post('/register', requireGuest, async (req, res) => { // đăng kí tài khoản 
     console.log("register"); 
 
     // 1. lấy dữ liệu từ request
@@ -84,10 +86,10 @@ authRoutes.post('/register', async (req, res) => { // đăng kí tài khoản
     }
 
     // 3.5 hash password 
-    let hashPass = await hashPassword(password); 
+    let passwordHash = await hashPassword(password); console.log("AUTH: hashPass: ", passwordHash); 
 
     // 4. thêm user vào users
-    await createUser({username, hashPass, role: 'user'}); 
+    await createUser({username, passwordHash, role: 'user'}); 
 
     // 5. báo thành công 
     res.json({message: "Register success"}); 
