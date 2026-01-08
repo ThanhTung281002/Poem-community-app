@@ -5,7 +5,7 @@ const {attachUser} = require('./middlewares/auth')
 const authRoutes = require('./route/auth')
 const myPoemsRoutes = require('./route/my_poems'); 
 const adminRoutes = require('./route/admin'); 
-const galleryRoutes = require('./route/gallery'); 
+const galleryRoutes = require('./route/gallery'); console.log("SERVER: galleryRoutes: ", galleryRoutes); 
 const {connectDB } = require('./DB/mongo');
 
 // ======== 2. KHỞI TẠO APP =======

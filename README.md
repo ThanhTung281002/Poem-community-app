@@ -1,78 +1,158 @@
-# Poem commnity 
-## Ý tưởng và các logic cơ bản của website 
-Website mà phục vụ mục đích đăng thơ và trưng bày các bài thơ hay của những người yêu thơ trong cộng đồng, cộng đồng mang tên là Rbut
-Có các logic sau: 
-1. Có 3 role: admin, user, guest
-2. guest thì có quyền xem các bài thờ trong phong duy nhất (có thể mở rộng thêm theo chủ đề sau này). User thì ngoài quyền xem các bài thơ trong phòng trưng bày chung, còn có quyền đăng lên có bài thơ của mình, và chỉnh sửa, xóa các bài thơ, và nếu được admin duyệt thì sẽ được để trên phòng trưng bày chung. Admin thì có quyền xét duyệt các bài thơ mới được thành viên gửi lên. 
-3. Thơ có 3 trạng thái draft, pending, approved. 
-4. với 3 role thì có 3 khu vực cho 3 vai trò đó, phòng cá nhân, phòng admin và phòng trưng bày chung cho tất cả mọi người
+# Poem Community Backend (Rbut)
 
+Backend cho website cộng đồng thơ – nơi người dùng có thể đăng thơ,
+admin duyệt nội dung, và các bài thơ được chọn lọc sẽ được trưng bày công khai.
 
-## API route của website 
-Các api route (những hành động mà BE logic cho phép đối với người dùng): 
-- GET     /api/gallery/poems - tất cả mọi người xem thơ trong phòng triển lãm chung. 
+Dự án tập trung vào:
+- tư duy backend thực tế
+- phân quyền người dùng
+- thiết kế API
+- làm việc với MongoDB
+- quy trình phát triển backend độc lập với frontend
 
-
-- GET     /api/my/poems - user xem thơ pending của bản thân trong trang cá nhân 
-- POST    /api/my/poems - user đăng thơ
-- PUT     /api/my/poems:id - user sửa thơ (khi pending)
-- DELETE  /api/my/poems:id - user xóa thơ của mình (khi pending)
-
-- GET     /api/admin/poems - admin xem tất cả thơ cần duyệt (pending)
-- PUT     /api/admin/poems:id - admin xét duyệt thơ (đổi trạng thái từ pending sang approved)
-- DELETE  /api/admin/poems:id - admin xóa thơ không phù hợp 
-
-// bước từ chối thơ của admin thì đồng nghĩa với xóa thơ rồi nên mình gộp chung, vì nếu không duyệt thì thơ sẽ thêm một state nữa là rejected nên phức tạp hơn
-
-- POST    /api/auth/login   -> đăng nhập 
-- POST    /api/auth/logout  -> đăng xuất
-- GET     /api/auth/me      -> biết "tôi là ai" 
-
-// cái cuối biết tôi là ai đó là gì vậy? Ý nghĩa của nó là gì? Bạn nói nó quan trọng với FE nhưng mình không hiểu quan trọng chỗ nào. 
-
-POST    /api/auth/register -> đăng kí tài khoản thành viên của guest 
-
-
-
-## Schema cho cơ sở dữ liệu của website
-Có 2 collection: 
-1. users:
-_id 
-username
-password_hash
-role
-createdAt
 ---
-2. poems:
-_id 
-title
-content
-authorId
-status
-createdAt
-updatedAt
 
-### Map API route với schema 
-- GET     /api/gallery/poems - lấy toàn bộ các poems mà có status approved 
+## 1. Mục đích dự án
 
-- GET     /api/my/poems - lấy poems mà authorId trùng với userId lúc đó 
-- POST    /api/my/poems - đăng một poem mới lên poems nếu đó là user 
-- PUT     /api/my/poems:id - chỉnh sửa tile và nội dung (nếu có) cho poems có trùng id 
-- DELETE  /api/my/poems:id - giống như trên nhưng thay vì chỉnh thì là xóa cả poem đó 
+Mục tiêu của dự án là xây dựng **một backend hoàn chỉnh** cho một website cộng đồng,
+trong đó backend chịu trách nhiệm toàn bộ về:
 
-- GET     /api/admin/poems - lấy poems mà có status pending
-- PUT     /api/admin/poems:id - đổi status thành approved của poem trùng id 
-- DELETE  /api/admin/poems:id - xóa poem trùng id 
+- xác thực người dùng (authentication)
+- phân vai trò (authorization)
+- xử lý dữ liệu thơ
+- kiểm soát quy trình duyệt nội dung
+- cung cấp API rõ ràng cho frontend hoặc tester
 
-- POST    /api/auth/login   -> tìm user có trùng username và password
-- POST    /api/auth/logout  -> bên BE 
-- GET     /api/auth/me      -> Bên BE 
-- POST    /api/auth/register -> thêm một user vào users collection 
+Dự án **không tập trung vào UI**, mà tập trung vào **logic, kiến trúc và quy trình backend**.
+
+---
+
+## 2. Các vai trò trong hệ thống
+
+### Guest
+- xem các bài thơ đã được duyệt (gallery)
+- đăng ký tài khoản
+
+### User
+- đăng nhập / đăng xuất
+- đăng thơ mới (trạng thái `pending`)
+- xem danh sách thơ của chính mình
+- sửa hoặc xóa thơ của mình (khi chưa được duyệt)
+
+### Admin
+- xem danh sách thơ đang chờ duyệt
+- duyệt thơ (chuyển từ `pending` → `approved`)
+- xóa thơ không phù hợp (kể cả đã được duyệt)
+
+---
+
+## 3. Công nghệ sử dụng
+
+- Node.js
+- Express.js
+- MongoDB
+- express-session (session + cookie)
+- bcrypt (hash và so sánh password)
+- Postman (test API)
+
+---
+
+## 4. Cấu trúc thư mục
+project/
+├── server.js # entry point của server
+├── route/
+│ ├── auth.js # auth routes (login, logout, register, me)
+│ ├── my_poems.js # user poem routes
+│ ├── admin.js # admin routes
+│ └── gallery.js # public gallery routes
+├── middlewares/
+│ └── auth.js # attachUser, requireLogin, requireAdmin
+├── DB/
+│ ├── mongo.js # MongoDB connection
+│ └── poem.js # toàn bộ logic thao tác với poems collection
+├── logic/
+│ ├── validate.js # validate input
+│ └── password.js # hash / compare password
+├── public/ # frontend (sẽ xây dựng sau)
+├── .env.example
+├── package.json
+└── README.md
 
 
+---
 
-### Cách chạy code 
-- git clone sản phẩm về 
-- tải nodejs
-- chạy node server.js trên commandline 
+## 5. Cách chạy dự án
 
+### 5.1. Yêu cầu
+- Node.js >= 18
+- MongoDB (local hoặc MongoDB Atlas)
+
+### 5.2. Cài đặt thư viện
+
+```bash
+npm install
+```
+
+### 5.3 cấu hình môi trường
+Tạo file `.env` dựa trên `.env.example`:
+```bash
+MONGODB_URI=your_mongodb_connection_string
+SESSION_SECRET=your_secret_key
+```
+
+### 5.4 Chạy server
+```bash
+npm start
+```
+
+Server sẽ chạy tại: 
+```bash
+http://localhost:3000
+```
+
+## 6. API chính (tóm tắt)
+### Auth
+- POST /api/auth/register
+- POST /api/auth/login
+- POST /api/auth/logout
+- GET /api/auth/me
+
+### User poems
+- POST /api/auth/register
+- POST /api/auth/login
+- POST /api/auth/logout
+- GET /api/auth/me
+
+
+### Admin
+- GET /api/admin/poems
+- PUT /api/admin/poems/:id
+- DELETE /api/admin/poems/:id
+
+
+### Public gallery
+- GET /api/gallery/poems
+
+## 7. Test API 
+Toàn bộ API được test bằng Postman.
+
+Postman Collection được sử dụng để: 
+
+- GET /api/admin/poems
+- PUT /api/admin/poems/:id
+- DELETE /api/admin/poems/:id
+
+
+## 8. Ghi chú & hướng phát triển
+Dự án hiện tại tập trung vào backend core.
+Có thể mở rộng trong tương lai:
+
+- xây dựng frontend (HTML / JS / framework)
+- pagination cho gallery
+- comment & like cho thơ
+- logging middleware
+- chuẩn hóa API response format
+- deploy lên server thật
+
+Dự án được xây dựng với mục đích học tập và rèn luyện tư duy backend,
+không nhằm mục đích thương mại.
