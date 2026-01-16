@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Đăng kí tài khoản</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- DaisyUI -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="wrapper min-h-screen flex items-center justify-center bg-base-200">
+        <div class="card w-96 bg-base-100">
+            <div class="card-body p-10 px-12">
+                <h2 class="card-title flex justify-center text-2xl">Mừng bạn trở lại</h2>
+
+                <div class="form-inputs mt-4">
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Username</legend>
+                        <input id="usernameInput" type="text" class="input w-full input-bordered mt-1" placeholder="type here"/>
+                    </fieldset>
+
+                    <fieldset class="fieldset mt-4">
+                        <legend class="fieldset-legend">Password</legend>
+                        <input id="passwordInput" type="password" class="input w-full input-bordered mt-1" placeholder="type here"/>
+                    </fieldset>
+
+                </div>
+
+                <button id="submitBtn" class="btn btn-primary mt-2 text-lg">Gửi</button>
+
+                <div class="helper-text">
+                    <p class="flex justify-center text-xs gap-1">Chưa có tài khoản? <a class="link link-primary" href="/register.html"> Đăng kí</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+
+  <script src="/js/login.js"></script>
+</body>
+</html>

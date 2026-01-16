@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Đăng kí thành viên</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- DaisyUI -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="wrapper min-h-screen flex items-center justify-center bg-base-200">
+        <div class="card w-96 bg-base-100">
+            <div class="card-body p-10 px-12">
+                <h2 class="card-title flex justify-center text-2xl">Đăng kí thành viên</h2>
+
+                <div class="form-inputs mt-3">
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Họ và tên</legend>
+                        <input id="fullNameInput" type="text" class="input w-full input-bordered mt-1" placeholder="type here"/>
+                    </fieldset>
+
+                    <fieldset class="fieldset mt-4">
+                        <legend class="fieldset-legend">Username</legend>
+                        <input id="usernameInput" type="text" class="input w-full input-bordered mt-1" placeholder="type here"/>
+                    </fieldset>
+
+                    <fieldset class="fieldset mt-4">
+                        <legend class="fieldset-legend">Password</legend>
+                        <input id="passwordInput" type="password" class="input w-full input-bordered mt-1" placeholder="type here"/>
+                    </fieldset>
+
+                </div>
+
+                <button id="submitButton" class="btn btn-accent mt-2 text-lg">Gửi</button>
+
+                <div class="helper-text">
+                    <p class="flex justify-center text-xs gap-1">Đã có tài khoản? <a class="link link-primary" href="/login.html"> Đăng nhập</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+
+  <script src="/js/register.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Người dùng</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- DaisyUI -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <div class="navbar p-4 shadow-md flex-none">
+      <div class="navbar-start ml-3">
+        <a href="index.html" class="btn btn-ghost text-2xl">Rbut</a>
+      </div>
+      
+        <div class="navbar-end">
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost m-1">
+                    <div class="w-14 rounded-full">
+                        <img src="https://img.daisyui.com/images/profile/demo/batperson@192.webp" />
+                    </div>
+                </div>
+                <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow-sm">
+                    <li><a href="/public/my-poems.html">Chỉnh sửa/xóa</a></li>
+                    <li><a id="logout-button" href="#">Đăng xuất</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="wraper flex-1 bg-base-100 flex items-center justify-center mt-2">
+        <div class="card w-1/3 bg-base-200">
+            <div class="card-body">
+                <textarea name="title" id="new-title" class="textarea w-full" placeholder="Nhập tiêu đề"></textarea>
+                <textarea name="content" id="new-content" class="textarea mt-10 w-full h-48" placeholder="Nhập nội dung"></textarea>
+                <div class="card-action flex justify-center mt-7">
+                    <button id="upload-button" class="btn btn-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                        <path d="M11.47 1.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1-1.06 1.06l-1.72-1.72V7.5h-1.5V4.06L9.53 5.78a.75.75 0 0 1-1.06-1.06l3-3ZM11.25 7.5V15a.75.75 0 0 0 1.5 0V7.5h3.75a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-9a3 3 0 0 1-3-3v-9a3 3 0 0 1 3-3h3.75Z" />
+                    </svg>
+                    Upload
+                    </button>  
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    
+
+  <script src="/js/my-poem-new.js"></script>
+</body>
+</html>

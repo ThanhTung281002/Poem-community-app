@@ -10,7 +10,7 @@ const myPoemsRoutes = express.Router(); // chỗ mình đặt bom 💣
 
 
 // ========= 3. CÁC ROUTE THUỘC POEMS ======= 
-myPoemsRoutes.get('', requireLogin, async (req, res) => {
+myPoemsRoutes.get('', requireLogin, async (req, res) => { //lấy thơ của user 
     const authorId = req.user.id; 
 
     // 1. lấy tất cả các poems mà có status approved
@@ -22,8 +22,10 @@ myPoemsRoutes.get('', requireLogin, async (req, res) => {
 
 
 myPoemsRoutes.post('', requireLogin, async (req, res) => { // đăng thơ lên 
+    console.log("vào post /api/my/poems để đăng thơ"); 
+
     // 1. lấy dữ liệu thơ từ request
-    const {title, content} = req.body; 
+    const {title, content} = req.body; console.log("Nội dung thơ đăng là: ", title, content); 
     const userId = req.user.id; 
 
     // 1.5 xác nhận dữ liệu thơ hợp lệ, nếu không trả 400 
@@ -38,7 +40,7 @@ myPoemsRoutes.post('', requireLogin, async (req, res) => { // đăng thơ lên
 }); 
 
 
-myPoemsRoutes.put('/:id',requireLogin, async (req, res) => {
+myPoemsRoutes.put('/:id',requireLogin, async (req, res) => { // chỉnh thơ
     // 1. lấy poem id 
     const poemId = req.params.id; 
     const userId = req.user.id; 
@@ -74,10 +76,12 @@ myPoemsRoutes.put('/:id',requireLogin, async (req, res) => {
     res.json({message: "Poem updated successfully!"}); 
 }); 
 
-myPoemsRoutes.delete('/:id', requireLogin, async (req, res) => {
+myPoemsRoutes.delete('/:id', requireLogin, async (req, res) => {// xóa thơ 
+    console.log("Vào api delete /api/my/poems/:id"); 
+
     // 1. lấy poem id 
     const poemId = req.params.id; 
-    const userId = req.user.id; 
+    const userId = req.user.id; console.log("poem id is", poemId); 
 
     // 2. check poem id, nếu không có thì 404, not found
     const poem = await findPoemById(poemId); 

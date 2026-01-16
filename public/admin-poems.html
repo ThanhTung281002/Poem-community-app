@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Người dùng</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- DaisyUI -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="flex flex-col">
+    <div class="navbar p-4 shadow-md flex-none">
+      <div class="navbar-start ml-3">
+        <a href="index.html" class="btn btn-ghost text-2xl">Rbut</a>
+      </div>
+      
+        <div class="navbar-end">
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost m-1">
+                    <div class="w-14 rounded-full">
+                        <img src="https://img.daisyui.com/images/profile/demo/batperson@192.webp" />
+                    </div>
+                </div> 
+                <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow-sm">
+                    <li><a id="logout-button" href="#">Đăng xuất</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading" class=" flex-1 flex justify-center py-10 hidden">
+        <span class="loading loading-dots loading-lg"></span>
+    </div>
+    
+    <main id="pending-poems" class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-20 p-10"></main>
+
+
+    <dialog id="approveModal" class="modal">
+        <div class="modal-box max-w-2xl">
+            <h3 id="poem-modal-title" class="font-bold text-2xl"></h3>
+            <p id="poem-modal-content" class="mt-4 whitespace-pre-line"></p>
+
+            <div class="modal-action">
+                <button id="deleteBtn" class="btn btn-outline btn-secondary">Xóa</button>
+                <button id="approveBtn" class="btn btn-success">Duyệt</button>
+            </div>
+        </div>
+    </dialog>
+    
+    
+  
+  <script src="/js/admin-poems.js"></script>
+</body>
+</html>

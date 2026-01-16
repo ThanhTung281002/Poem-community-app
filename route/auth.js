@@ -73,6 +73,7 @@ authRoutes.post('/register', requireGuest, async (req, res) => { // đăng kí t
 
     // 1. lấy dữ liệu từ request
     const {username, password} = req.body; 
+    console.log("username và password: ", {username, password}); 
 
     // 2. validate input
     if (!validateRegisterInput(username, password)) {

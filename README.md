@@ -118,10 +118,10 @@ http://localhost:3000
 - GET /api/auth/me
 
 ### User poems
-- POST /api/auth/register
-- POST /api/auth/login
-- POST /api/auth/logout
-- GET /api/auth/me
+- GET /api/my/poems 
+- POST /api/my/poems 
+- PUT /api/my/poems/:id
+- DELETE /api/my/poems/:id
 
 
 ### Admin
